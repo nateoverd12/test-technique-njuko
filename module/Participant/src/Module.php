@@ -27,8 +27,14 @@ class Module
                     /** @var \Zend\Form\Form $form */
                     $form = new ParticipantForm();
 
+                    //Set Doctrine ObjectManager
+                    $form->setObjectManager($entityManager);
+
                     $form->setHydrator(new DoctrineHydrator($entityManager));
                     $form->setObject(new Participant());
+
+                    //Initialize elements onto form
+                    $form->init();
 
                     return $form;
                 },

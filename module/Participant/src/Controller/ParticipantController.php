@@ -66,26 +66,19 @@ class ParticipantController extends AbstractActionController
 
         if (!$form->isValid()) {
             return ['form' => $form];
-        }else{
+        } else {
 
             $participant = $form->getData();
-
-            /** TODO Modification Evenement (forcer pour le moment) */
-            /** @var \Application\Entity\Event $event */
-            $event = $this->entityManager->getRepository('Application\Entity\Event')->find(1);
-            $participant->setEvent($event);
 
             $this->entityManager->persist($participant);
             $this->entityManager->flush();
 
             return $this->redirect()->toRoute('participant/list');
-
         }
-
-
     }
 
-    public function generateBibNumbersAction(){
+    public function generateBibNumbersAction()
+    {
 
         return $this->redirect()->toRoute('participant/list');
 
