@@ -93,6 +93,20 @@ class ParticipantController extends AbstractActionController
 
     public function deleteAction(){
 
+        $id = (int) $this->params()->fromRoute('id', 0);
+
+        /** @var \Application\Entity\Participant $participant */
+        if (0 !== $id) {
+            try {
+                $participant = $this->entityManager->getRepository('Application\Entity\Participant')->find($id);
+            } catch (\Exception $e) {
+                return $this->redirect()->toRoute('participant/list');
+            }
+        }
+
+        $this->entityManager->remove($participant);
+        $this->entityManager->flush();
+
         return $this->redirect()->toRoute('participant/list');
 
     }
