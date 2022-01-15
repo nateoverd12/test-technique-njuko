@@ -25,8 +25,9 @@
                         <td>Nom</td>
                         <td>Prénom</td>
                         <td>Sexe</td>
-                        <td></td>
-                        <td></td>
+                        <td>Epreuve</td>
+                        <td>N° de dossard</td>
+                        <td>
                     </tr>
                 </thead>
                 <tbody>
@@ -50,6 +51,7 @@
                                     ?>
                                 </td>
                                 <td><?=$participant->getEvent()->getName()?></td>
+                                <td><?= $participant->getBibNumber()?></td>
                                 <td>
                                     <a class="btn btn-sm btn-default" href="<?= $this->url('participant/participant-form', array('id' => $participant->getId())) ?>">Editer</a>
                                     <a class="btn btn-sm btn-default" href="<?= $this->url('participant/delete', array('id' => $participant->getId())) ?>">Supprimer</a>

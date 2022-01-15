@@ -41,6 +41,7 @@
                 <?=$this->formElementErrors($form->get('event'))?>
             </div>
         </div>
+        <div class="alert alert-warning" role="alert">Si les numéros de dossards ont déjà été attribué, il faudra relancer la génération des dossards pour mettre à jour tous les participants, dont celui-ci.</div>
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
                 <?=$this->formSubmit($form->get('submit'));?>

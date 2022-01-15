@@ -67,8 +67,13 @@ class ParticipantController extends AbstractActionController
         if (!$form->isValid()) {
             return ['form' => $form];
         } else {
-
+            $formerParticipantEvent = $participant ? $participant->getEvent() : null;
             $participant = $form->getData();
+            $participantEventId = $participant->getEvent()->getId();
+
+            if (null !== $formerParticipantEvent && $formerParticipantEvent->getId() !== $participantEventId) {
+
+            }
 
             $this->entityManager->persist($participant);
             $this->entityManager->flush();
@@ -79,6 +84,32 @@ class ParticipantController extends AbstractActionController
 
     public function generateBibNumbersAction()
     {
+        /** @var Participant[] $participants */
+        $participants = $this->entityManager->getRepository('Application\Entity\Participant')->findBy(
+            [],
+            ['id' => 'ASC']
+        );
+
+        $bibIndexByEvents = [];
+
+        foreach ($participants as $participant) {
+            $eventId = $participant->getEvent()->getId();
+
+            if (!array_key_exists($eventId, $bibIndexByEvents)) {
+                $bibIndexByEvents[$eventId] = 0;
+            }
+
+            $newBib = $bibIndexByEvents[$eventId] + 1; 
+            $bibIndexByEvents[$eventId] = $newBib;
+            
+            if ($participant->getBibNumber() !== $newBib) {
+                $participant->setBibNumber($newBib);
+
+                $this->entityManager->persist($participant);
+            }
+        }
+
+        $this->entityManager->flush();
 
         return $this->redirect()->toRoute('participant/list');
 

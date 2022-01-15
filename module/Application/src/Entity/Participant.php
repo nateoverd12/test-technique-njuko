@@ -23,6 +23,9 @@ class Participant
     /** @ORM\Column(type="string") */
     protected $sex;
 
+    /** @ORM\Column(type="integer", nullable=true) */
+    protected $bibNumber = null;
+
     /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\Event")
      * @ORM\JoinColumn(name="event_id", referencedColumnName="id", onDelete="CASCADE")
@@ -109,6 +112,22 @@ class Participant
     public function setEvent($event)
     {
         $this->event = $event;
+    }
+
+    /**
+     * @return ?int $bibNumber
+     */
+    public function getBibNumber(): ?int
+    {
+        return $this->bibNumber;
+    }
+
+    /**
+     * @param int $bibNumber
+     */
+    public function setBibNumber($bibNumber)
+    {
+        $this->bibNumber = $bibNumber;
     }
 
 }
