@@ -67,13 +67,7 @@ class ParticipantController extends AbstractActionController
         if (!$form->isValid()) {
             return ['form' => $form];
         } else {
-            $formerParticipantEvent = $participant ? $participant->getEvent() : null;
             $participant = $form->getData();
-            $participantEventId = $participant->getEvent()->getId();
-
-            if (null !== $formerParticipantEvent && $formerParticipantEvent->getId() !== $participantEventId) {
-
-            }
 
             $this->entityManager->persist($participant);
             $this->entityManager->flush();
