@@ -4,7 +4,15 @@ namespace Application\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-/** @ORM\Entity */
+
+
+
+/**
+ * @ORM\Entity
+ * @ORM\Table(
+ *      uniqueConstraints={@ORM\UniqueConstraint(columns={"bibNumber", "event_id"})}
+ * )
+ */
 class Participant
 {
     /**
@@ -33,6 +41,15 @@ class Participant
      * @var \Application\Entity\Event
      */
     protected $event;
+
+    /**
+     * @var null|int $runningTime
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $runningTime = null;
+
+    /** @ORM\Column(type="boolean") */
+    protected $hasRun = false;
 
     /**
      * @return mixed
@@ -125,9 +142,47 @@ class Participant
     /**
      * @param int $bibNumber
      */
-    public function setBibNumber($bibNumber)
+    public function setBibNumber(int $bibNumber): void
     {
         $this->bibNumber = $bibNumber;
     }
 
+    /**
+     * @return null|string
+     */
+    public function getRunningTime(): ?string
+    {
+        return $this->runningTime ? $this->getSecondsToString() : null;
+    }
+
+    /**
+     * @param ?string $runningTime
+     */
+    public function setRunningTime(?string $runningTime): void
+    {
+        if (null !== $runningTime && trim($runningTime) !== '') {
+            $this->runningTime = $this->convertToSeconds($runningTime);
+            $this->hasRun = true;
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasRun(): bool
+    {
+        return $this->hasRun;
+    }
+
+    private function convertToSeconds(string $time): int
+    {
+        [$h, $m, $s] = explode(':', $time);
+
+        return intval($s) + 60 * intval($m) + 3600 * intval($h);
+    }
+
+    private function getSecondsToString(): string
+    {
+        return gmdate("H:i:s", $this->runningTime);
+    }
 }

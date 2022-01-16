@@ -3,3 +3,36 @@
         <h1>Classements</h1>
     </div>
 </div>
+
+<div class="table-responsive mt-20">
+    <table class="table">
+        <thead>
+            <tr>
+                <td>#</td>
+                <td>Evenement</td>
+                <td>Date</td>
+            </tr>
+        </thead>
+        <tbody>
+            <?php if($this->events){ ?>
+                <?php
+                
+                foreach($this->events as $event){ ?>
+                    <tr>
+                        <td><?=$event->getId()?></td>
+                        <td><?=$event->getName()?></td>
+                        <td>le <?=$event->getDateEvent()->format('d/m/Y à H:i:s');?></td>
+                        <td>
+                            <a class="btn btn-sm btn-default" href="<?= $this->url('classement/classement', ['id' => $event->getId()]) ?>">Général</a>
+                            <a class="btn btn-sm btn-default" href="<?= $this->url('classement/classement', ['id' => $event->getId()],['query' => ['type' => 'homme']])?>">Homme</a>
+                            <a class="btn btn-sm btn-default" href="<?= $this->url('classement/classement', ['id' => $event->getId()],['query' => ['type' => 'femme']])?>">Femme</a>
+                        </td>
+                    </tr>
+                <?php } ?>
+            <?php } ?>
+
+        </tbody>
+    </table>
+</div>
+</div>
+</div>

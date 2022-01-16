@@ -5,8 +5,9 @@ namespace Participant\Form;
 use Application\Entity\Event;
 use Doctrine\Persistence\ObjectManager;
 use Zend\Form\Form;
+use Zend\InputFilter\InputFilterProviderInterface;
 
-class ParticipantForm extends Form
+class ParticipantForm extends Form implements InputFilterProviderInterface
 {
     /** @var  ObjectManager */
     protected $objectManager;
@@ -18,12 +19,28 @@ class ParticipantForm extends Form
 
     public function init()
     {
-
         $this->setAttribute('class', 'form-horizontal');
 
         $this->add([
             'name' => 'id',
             'type' => 'Hidden',
+        ]);
+
+        $this->add([
+            'name' => 'bibNumber',
+            'type' => 'Hidden',
+        ]);
+
+        $this->add([
+            'name' => 'time',
+            'type' => 'Text',
+            'options'=> [
+                'label'  => 'Chrono de la course',
+            ],
+            'attributes' => [
+                'placeholder' => '__:__:__',
+                'pattern' => "\d{1,3}:\d{1,2}:\d{1,2}"
+            ],
         ]);
 
         $this->add([
@@ -66,7 +83,7 @@ class ParticipantForm extends Form
             'name' => 'event',
             'required' => true,
             'attributes' => [
-                'id' => 'selectBrand',
+                'id' => 'selectEvent',
                 'multiple' => false,
                 'value' => null,
             ],
@@ -114,5 +131,22 @@ class ParticipantForm extends Form
     public function setObjectManager(ObjectManager $objectManager)
     {
         $this->objectManager = $objectManager;
+    }
+
+    public function getInputFilterSpecification()
+    {
+        return [
+            'time' => [
+                'required' => false,
+                'validators' => [
+                    [
+                        "name" => 'Zend\Validator\Regex',
+                        "options" => [
+                            "pattern" => '/^\d{1,3}:\d{1,2}:\d{1,2}$/',
+                        ]
+                    ]
+                ]
+            ]
+        ];
     }
 }

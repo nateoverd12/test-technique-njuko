@@ -49,6 +49,15 @@ class ParticipantController extends AbstractActionController
         if (0 !== $id) {
             try {
                 $participant = $this->entityManager->getRepository('Application\Entity\Participant')->find($id);
+
+                if (null !== $participant->getBibNumber()) {
+                    $form->remove('event');
+                }
+
+                if ($runningTime = $participant->getRunningTime()) {
+                    $form->get('time')->setValue($runningTime);
+                }
+
                 $form->bind($participant);
             } catch (\Exception $e) {
                 return $this->redirect()->toRoute('participant/list');
@@ -68,6 +77,9 @@ class ParticipantController extends AbstractActionController
             return ['form' => $form];
         } else {
             $participant = $form->getData();
+
+            $time = $form->get('time')->getValue();
+            $participant->setRunningTime($time);
 
             $this->entityManager->persist($participant);
             $this->entityManager->flush();

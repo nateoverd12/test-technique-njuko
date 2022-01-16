@@ -4,13 +4,12 @@ namespace Classement;
 
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
-use Zend\ServiceManager\Factory\InvokableFactory;
 
 return [
     'router' => [
         'routes' => [
             'classement' => [
-                'type' => Segment::class,
+                'type' => Literal::class,
                 'options' => [
                     'route'    => '/classement',
                     'defaults' => [
@@ -18,12 +17,28 @@ return [
                         'action'     => 'index',
                     ],
                 ],
+                'may_terminate' => true,
+                'child_routes'  => array(
+                    'classement'   =>  array(
+                        'type'    => Segment::class,
+                        'options'   =>  array(
+                            'route' =>  '/:id',
+                            'constraints' => array(
+                                'id'     => '[0-9]+',
+                            ),
+                            'defaults'  =>  array(
+                                'controller' => Controller\ClassementController::class,
+                                'action'    =>  'ranking'
+                            )
+                        )
+                    ),
+                ),
             ]
         ],
     ],
     'controllers' => [
         'factories' => [
-            Controller\ClassementController::class => InvokableFactory::class,
+            Controller\ClassementController::class => Controller\ClassementControllerFactory::class,
         ],
     ],
     'view_manager' => [
